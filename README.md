@@ -1,37 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# デイリーミッションスタンプアプリ 概要説明
 
-## Getting Started
+このアプリは、日々の習慣やタスクを **「ミッション」** として管理し、達成状況を記録・可視化する習慣化支援アプリです。健康・成長・趣味など、継続したい活動をミッションに設定し、毎日の達成を後押しします。
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 主な機能
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 1. 今日のミッション管理
+- カテゴリ別（健康 / 成長 / 趣味 など）に今日のミッションを一覧表示
+- ミッションの **完了・未完了** 状態をワンタップで切替
+- ミッションの **追加・編集・削除**
+- その日のミッションをすべて達成すると **スタンプ** を獲得
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 2. カレンダー機能
+- **月間 / 週間** 表示の切替
+- 達成日にスタンプを表示する **カレンダービュー**
+- 日付を選択すると、その日のミッション詳細を確認
+- 期間ごとのミッション達成状況を **統計グラフ** で可視化
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. 達成状況分析
+- **現在の連続達成日数** と **最長記録** をリアルタイム表示
+- **カテゴリ別達成率** を円グラフや棒グラフで表示
+- **週間・月間・年間** 単位での統計情報
+- 条件達成で **アチーブメント（称号）** を獲得
 
-## Learn More
+### 4. 設定
+- プロフィール情報の編集
+- 通知設定（メール / プッシュ通知 / リマインダー）
+- 表示設定（ライト / ダークテーマ・言語設定）
+- プライバシー設定（プロフィール公開範囲・統計情報共有）
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ユーザーインターフェース
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **レスポンシブデザイン**：モバイル・タブレット・デスクトップ対応
+- グラデーションを用いた **モダンなUI**
+- サイドバーやタブを使った **直感的ナビゲーション**
+- スタンプカレンダーや統計グラフで **視覚的フィードバック**
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 技術スタック
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# stamp-card-app-client
+| 分類 | 採用技術 |
+|------|----------|
+| フレームワーク | Next.js (React) |
+| スタイリング | Tailwind CSS |
+| アイコン | Lucide React |
+| クライアントステート管理 | React Hooks（`useState`, `useEffect`） |
+
+---
+
+## ユーザー体験のポイント
+
+- **スタンプ・グラフ・アチーブメント** による視覚的な達成感
+- 連続記録の表示で **モチベーションを維持**
+- カテゴリ分けで **多様な習慣づけ** をサポート
+- すべてのデバイスで **一貫した操作性**
+
+---
+
+## 想定ユーザー
+
+- 日々の習慣を確立したい人
+- 自己啓発や成長を **記録・可視化** したい人
+- 健康習慣を **継続的に維持** したい人
+- 目標達成のためのタスク管理を **効率化** したい人
