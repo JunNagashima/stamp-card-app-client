@@ -6,8 +6,8 @@ import {
   ArrowLeft, RefreshCw, Settings, Clock, Users, Package
 } from 'lucide-react';
 import Link from 'next/link';
-import Default from '@/app/_components/default';
-import SidebarContent from '@/_components/organisms/SideBarContent';
+import Default from '@/app/components/organisms/default';
+import SidebarContent from '@/app/components/organisms/SideBarContent';
 import {
   Category, Frequency, RegularMission, DailyMission, Mission, NewMission,
   defaultCategories, defaultFrequencies, formatFrequency,

@@ -5,9 +5,9 @@ import {
   CheckCircle, Map, PlusCircle, Edit, Trash2, Star, Heart, Zap, Shield, Calendar as CalendarIcon,
   Award, X, Save
 } from 'lucide-react';
-import Default from '@/app/_components/default';
-import SidebarContent from '@/_components/organisms/SideBarContent';
-import Calendar from '@/_components/organisms/Calendar';
+import Default from '@/app/components/organisms/default';
+import SidebarContent from '@/app/components/organisms/SideBarContent';
+import Calendar from '@/app/components/organisms/Calendar';
 
 // カテゴリーの型定義
 interface Category {

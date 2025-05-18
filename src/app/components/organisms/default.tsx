@@ -5,7 +5,7 @@ import {
   User, Search, Bell,
   Menu, X
 } from 'lucide-react';
-import SidebarContent from '@/_components/organisms/SideBarContent';
+import SidebarContent from '@/app/components/organisms/SideBarContent';
 
 const Default = ({ children }: { children: ReactNode }) => {
   // モバイルサイドバー表示状態
