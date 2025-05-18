@@ -3,41 +3,81 @@
 import React from 'react';
 import { CheckCircle, ChevronRight } from 'lucide-react';
 
+// 月間達成状況の型定義
+interface MonthlyAchievements {
+  [date: string]: boolean;
+}
+
+// カレンダーコンポーネントのProps型定義
+interface CalendarProps {
+  // 日付関連プロップス
+  currentYear: number;
+  currentMonth: number;
+  onPrevMonth: () => void;
+  onNextMonth: () => void;
+
+  // 表示関連プロップス
+  showDetailLink?: boolean;
+  onDateClick?: (date: Date) => void;
+
+  // 達成状況データ
+  monthlyAchievements?: MonthlyAchievements;
+
+  // カスタマイズ
+  customClassName?: string;
+
+  // 日付文字列表現関数の外部化
+  getDateString?: (day: number | null) => string | null;
+
+  // オプション機能
+  highlightToday?: boolean;
+  todayString?: string;
+
+  // 選択中の日付
+  selectedDate?: Date;
+}
+
 /**
  * カレンダーコンポーネント
  * DailyMissionStampAppとCalendarPageの両方で使用される共通コンポーネント
  */
-const Calendar = ({
+const Calendar: React.FC<CalendarProps> = ({
   // 日付関連プロップス
   currentYear,
   currentMonth,
   onPrevMonth,
   onNextMonth,
+
   // 表示関連プロップス
   showDetailLink = false,
   onDateClick,
+
   // 達成状況データ
   monthlyAchievements = {},
+
   // カスタマイズ
   customClassName = "",
+
   // 日付文字列表現関数の外部化
   getDateString,
+
   // オプション機能
   highlightToday = true,
   todayString,
+
   // 選択中の日付
   selectedDate,
 }) => {
   // 月の名前
-  const monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+  const monthNames: string[] = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
 
   // カレンダーを生成する関数
-  const generateCalendar = (year, month) => {
+  const generateCalendar = (year: number, month: number): (number | null)[] => {
     const firstDayOfMonth = new Date(year, month, 1);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const startingDayOfWeek = firstDayOfMonth.getDay();
 
-    const calendar = [];
+    const calendar: (number | null)[] = [];
 
     // 週の初めの空白を埋める
     for (let i = 0; i < startingDayOfWeek; i++) {
@@ -56,7 +96,7 @@ const Calendar = ({
   const calendarDays = generateCalendar(currentYear, currentMonth);
 
   // 日付が選択された時の処理
-  const handleDateClick = (day) => {
+  const handleDateClick = (day: number | null): void => {
     if (onDateClick && day) {
       const dateObj = new Date(currentYear, currentMonth, day);
       onDateClick(dateObj);
@@ -64,7 +104,7 @@ const Calendar = ({
   };
 
   // 内部でdateStringを取得する関数（外部から提供されない場合）
-  const defaultGetDateString = (day) => {
+  const defaultGetDateString = (day: number | null): string | null => {
     if (!day) return null;
     return `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
   };
@@ -73,7 +113,7 @@ const Calendar = ({
   const getDateStringFn = getDateString || defaultGetDateString;
 
   // 選択された日付が現在の月に属しているか確認する関数
-  const isDateSelected = (day) => {
+  const isDateSelected = (day: number | null): boolean => {
     if (!selectedDate || !day) return false;
 
     return selectedDate.getFullYear() === currentYear &&
