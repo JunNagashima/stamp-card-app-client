@@ -2,12 +2,12 @@
 
 import React, { useState, useRef, useEffect, ReactElement, SVGProps } from 'react';
 import {
-  CheckCircle, Map, PlusCircle, Edit, Trash2, Star, Heart, Zap, Shield, Calendar as CalendarIcon,
-  Award, X, Save
+  CheckCircle, Map, PlusCircle, Edit, Trash2, Star, Heart, Zap, Shield, X, Save
 } from 'lucide-react';
 import Default from '@/app/components/organisms/default';
 import SidebarContent from '@/app/components/organisms/SideBarContent';
 import Calendar from '@/app/components/organisms/Calendar';
+import { useDate } from '@/hooks/date';
 
 // カテゴリーの型定義
 interface Category {
@@ -27,19 +27,19 @@ interface Mission {
 }
 
 // ミッションカテゴリー統計情報の型定義
-interface MissionCategoryStats {
-  count: number;
-  completed: number;
-  icon: React.ReactElement;
-}
+// interface MissionCategoryStats {
+//   count: number;
+//   completed: number;
+//   icon: React.ReactElement;
+// }
 
 // ミッション統計情報の型定義
-interface MissionStats {
-  currentStreak: number;
-  longestStreak: number;
-  completionRate: number;
-  thisMonthDays: number;
-}
+// interface MissionStats {
+//   currentStreak: number;
+//   longestStreak: number;
+//   completionRate: number;
+//   thisMonthDays: number;
+// }
 
 // 月間達成状況の型定義
 interface MonthlyAchievements {
@@ -47,27 +47,26 @@ interface MonthlyAchievements {
 }
 
 // MissionCategoryコンポーネントのProps型定義
-interface MissionCategoryProps {
-  category: string;
-  count: number;
-  completed: number;
-  color: string;
-  icon: React.ReactElement;
-}
+// interface MissionCategoryProps {
+//   category: string;
+//   count: number;
+//   completed: number;
+//   color: string;
+//   icon: React.ReactElement;
+// }
 
 // StatsCardコンポーネントのProps型定義
-interface StatsCardProps {
-  title: string;
-  value: string;
-  icon: React.ReactElement;
-}
+// interface StatsCardProps {
+//   title: string;
+//   value: string;
+//   icon: React.ReactElement;
+// }
 
 const DailyMissionStampApp: React.FC = () => {
-  // 現在の日付
-  const today = new Date();
-  const [currentMonth, setCurrentMonth] = useState<number>(today.getMonth());
-  const [currentYear, setCurrentYear] = useState<number>(today.getFullYear());
-  const [selectedDate, setSelectedDate] = useState<Date>(today);
+  const {
+    todayString,
+    setSelectedDate,
+  } = useDate();
 
   // ミッション追加用の状態
   const [newMissionTitle, setNewMissionTitle] = useState<string>('');
@@ -190,41 +189,13 @@ const DailyMissionStampApp: React.FC = () => {
   const allMissionsCompleted = dailyMissions.every(mission => mission.completed);
 
   // 統計データ
-  const stats: MissionStats = {
-    currentStreak: 7,
-    longestStreak: 14,
-    completionRate: 85,
-    thisMonthDays: 9 // 今月の達成日数
-  };
+  // const stats: MissionStats = {
+  //   currentStreak: 7,
+  //   longestStreak: 14,
+  //   completionRate: 85,
+  //   thisMonthDays: 9 // 今月の達成日数
+  // };
 
-  // 今日の日付の文字列表現
-  const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-
-  // 日付の文字列表現を取得（カレンダーコンポーネント用）
-  const getDateString = (day: number | null): string | null => {
-    if (!day) return null;
-    return `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-  };
-
-  // 前月に移動
-  const goToPreviousMonth = (): void => {
-    if (currentMonth === 0) {
-      setCurrentMonth(11);
-      setCurrentYear(currentYear - 1);
-    } else {
-      setCurrentMonth(currentMonth - 1);
-    }
-  };
-
-  // 次月に移動
-  const goToNextMonth = (): void => {
-    if (currentMonth === 11) {
-      setCurrentMonth(0);
-      setCurrentYear(currentYear + 1);
-    } else {
-      setCurrentMonth(currentMonth + 1);
-    }
-  };
 
   // 今日のすべてのミッションを完了としてマーク
   const markTodayAsComplete = (): void => {
@@ -239,40 +210,40 @@ const DailyMissionStampApp: React.FC = () => {
   };
 
   // MissionCategory コンポーネント
-  const MissionCategory: React.FC<MissionCategoryProps> = ({ category, count, completed, color, icon }) => (
-    <div className={`flex items-center justify-between ${color} p-3 rounded-lg mb-2`}>
-      <div className="flex items-center">
-        <div className="mr-2">{icon}</div>
-        <div className="font-medium">{category}</div>
-      </div>
-      <div className="text-sm">{completed}/{count} 完了</div>
-    </div>
-  );
+  // const MissionCategory: React.FC<MissionCategoryProps> = ({ category, count, completed, color, icon }) => (
+  //   <div className={`flex items-center justify-between ${color} p-3 rounded-lg mb-2`}>
+  //     <div className="flex items-center">
+  //       <div className="mr-2">{icon}</div>
+  //       <div className="font-medium">{category}</div>
+  //     </div>
+  //     <div className="text-sm">{completed}/{count} 完了</div>
+  //   </div>
+  // );
 
   // StatsCard コンポーネント
-  const StatsCard: React.FC<StatsCardProps> = ({ title, value, icon }) => (
-    <div className="bg-white p-4 rounded-lg shadow flex items-center justify-between">
-      <div>
-        <p className="text-sm text-gray-500">{title}</p>
-        <p className="text-xl font-bold">{value}</p>
-      </div>
-      <div className="bg-blue-100 p-2 rounded-full">
-        {icon}
-      </div>
-    </div>
-  );
+  // const StatsCard: React.FC<StatsCardProps> = ({ title, value, icon }) => (
+  //   <div className="bg-white p-4 rounded-lg shadow flex items-center justify-between">
+  //     <div>
+  //       <p className="text-sm text-gray-500">{title}</p>
+  //       <p className="text-xl font-bold">{value}</p>
+  //     </div>
+  //     <div className="bg-blue-100 p-2 rounded-full">
+  //       {icon}
+  //     </div>
+  //   </div>
+  // );
 
   // カテゴリー別にミッションをグループ化
-  const missionsByCategory: Record<string, MissionCategoryStats> = dailyMissions.reduce((acc, mission) => {
-    if (!acc[mission.category]) {
-      acc[mission.category] = { count: 0, completed: 0, icon: mission.icon };
-    }
-    acc[mission.category].count += 1;
-    if (mission.completed) {
-      acc[mission.category].completed += 1;
-    }
-    return acc;
-  }, {} as Record<string, MissionCategoryStats>);
+  // const missionsByCategory: Record<string, MissionCategoryStats> = dailyMissions.reduce((acc, mission) => {
+  //   if (!acc[mission.category]) {
+  //     acc[mission.category] = { count: 0, completed: 0, icon: mission.icon };
+  //   }
+  //   acc[mission.category].count += 1;
+  //   if (mission.completed) {
+  //     acc[mission.category].completed += 1;
+  //   }
+  //   return acc;
+  // }, {} as Record<string, MissionCategoryStats>);
 
   // 日付がクリックされたときの処理
   const handleDateClick = (date: Date): void => {
@@ -290,7 +261,7 @@ const DailyMissionStampApp: React.FC = () => {
         </div>
 
         {/* ミッションカテゴリー */}
-        <div className="bg-white rounded-xl p-4 shadow-md mb-6">
+        {/* <div className="bg-white rounded-xl p-4 shadow-md mb-6">
           <h2 className="font-bold mb-3 text-lg">カテゴリー</h2>
           {categories.map((category) => (
             <MissionCategory
@@ -302,10 +273,10 @@ const DailyMissionStampApp: React.FC = () => {
               icon={category.icon}
             />
           ))}
-        </div>
+        </div> */}
 
         {/* 統計情報 */}
-        <div className="bg-white rounded-xl p-4 shadow-md">
+        {/* <div className="bg-white rounded-xl p-4 shadow-md">
           <h2 className="font-bold mb-4 text-lg">達成状況</h2>
           <div className="grid grid-cols-2 gap-3">
             <StatsCard
@@ -329,7 +300,7 @@ const DailyMissionStampApp: React.FC = () => {
               icon={<CheckCircle className="w-5 h-5 text-blue-500" />}
             />
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* 中央コンテンツ：今日のミッション */}
@@ -545,16 +516,9 @@ const DailyMissionStampApp: React.FC = () => {
 
         {/* 共通カレンダーコンポーネントを使用 */}
         <Calendar
-          currentYear={currentYear}
-          currentMonth={currentMonth}
-          onPrevMonth={goToPreviousMonth}
-          onNextMonth={goToNextMonth}
           monthlyAchievements={monthlyAchievements}
           onDateClick={handleDateClick}
-          getDateString={getDateString}
-          todayString={todayString}
           showDetailLink={true}
-          selectedDate={selectedDate}
         />
       </div>
     </Default>

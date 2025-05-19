@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { CheckCircle, ChevronRight } from 'lucide-react';
+import { useDate } from '@/hooks/date';
 
 // 月間達成状況の型定義
 interface MonthlyAchievements {
@@ -10,31 +11,11 @@ interface MonthlyAchievements {
 
 // カレンダーコンポーネントのProps型定義
 interface CalendarProps {
-  // 日付関連プロップス
-  currentYear: number;
-  currentMonth: number;
-  onPrevMonth: () => void;
-  onNextMonth: () => void;
-
-  // 表示関連プロップス
   showDetailLink?: boolean;
   onDateClick?: (date: Date) => void;
-
-  // 達成状況データ
   monthlyAchievements?: MonthlyAchievements;
-
-  // カスタマイズ
   customClassName?: string;
-
-  // 日付文字列表現関数の外部化
-  getDateString?: (day: number | null) => string | null;
-
-  // オプション機能
   highlightToday?: boolean;
-  todayString?: string;
-
-  // 選択中の日付
-  selectedDate?: Date;
 }
 
 /**
@@ -42,32 +23,22 @@ interface CalendarProps {
  * DailyMissionStampAppとCalendarPageの両方で使用される共通コンポーネント
  */
 const Calendar: React.FC<CalendarProps> = ({
-  // 日付関連プロップス
-  currentYear,
-  currentMonth,
-  onPrevMonth,
-  onNextMonth,
-
-  // 表示関連プロップス
   showDetailLink = false,
   onDateClick,
-
-  // 達成状況データ
   monthlyAchievements = {},
-
-  // カスタマイズ
   customClassName = "",
-
-  // 日付文字列表現関数の外部化
-  getDateString,
-
-  // オプション機能
   highlightToday = true,
-  todayString,
-
-  // 選択中の日付
-  selectedDate,
 }) => {
+  const {
+    todayString,
+    currentMonth,
+    currentYear,
+    selectedDate,
+    getDateString,
+    goToPreviousMonth,
+    goToNextMonth
+  } = useDate();
+
   // 月の名前
   const monthNames: string[] = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
 
@@ -126,10 +97,10 @@ const Calendar: React.FC<CalendarProps> = ({
       <div className="flex justify-between items-center mb-4 md:mb-6">
         <h2 className="text-xl font-bold">{currentYear}年 {monthNames[currentMonth]}</h2>
         <div className="flex">
-          <button onClick={onPrevMonth} className="p-2 hover:bg-gray-100 rounded-full">
+          <button onClick={goToPreviousMonth} className="p-2 hover:bg-gray-100 rounded-full">
             &lt;
           </button>
-          <button onClick={onNextMonth} className="p-2 hover:bg-gray-100 rounded-full">
+          <button onClick={goToNextMonth} className="p-2 hover:bg-gray-100 rounded-full">
             &gt;
           </button>
         </div>
