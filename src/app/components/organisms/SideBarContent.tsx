@@ -34,8 +34,8 @@ const SidebarContent = () => {
     {
       label: '今日のミッション',
       icon: <LayoutDashboard className="w-5 h-5" />,
-      path: '/',
-      action: navigateTo('/')
+      path: '/dailyMissionStamp',
+      action: navigateTo('/dailyMissionStamp')
     },
     {
       label: 'ミッション管理',
