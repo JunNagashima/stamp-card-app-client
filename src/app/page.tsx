@@ -1,11 +1,7 @@
-import SidebarContent from "./components/organisms/SideBarContent";
+import { redirect } from "next/navigation";
+
 const page = () => {
-  return (
-    <div>
-      <SidebarContent />
-      Enter
-    </div>
-  );
+  redirect("/dailyMissionStamp");
 }
 
 export default page;
