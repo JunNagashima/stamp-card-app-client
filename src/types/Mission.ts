@@ -5,3 +5,9 @@ export interface Mission {
   completed: boolean;
   category: string;
 }
+
+export interface Category {
+  id: number;
+  name: string;
+  color: string;
+}

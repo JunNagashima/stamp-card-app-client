@@ -1,23 +1,16 @@
 'use client';
 
-import React, { useState, ReactElement, SVGProps } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Map, PlusCircle, Star, Heart, Zap, Shield, X,
+  Map, PlusCircle, Shield,
 } from 'lucide-react';
 import Default from '@/app/components/organisms/default';
 import SidebarContent from '@/app/components/organisms/SideBarContent';
 import Calendar from '@/app/components/organisms/Calendar';
 import { useDate } from '@/hooks/date';
 import MissionItem from '@/app/dailyMissionStamp/components/MissionItem';
-import type { Mission } from "@/types/Mission";
 import { useMission } from "@/hooks/mission";
-// カテゴリーの型定義
-interface Category {
-  id: number;
-  name: string;
-  icon: ReactElement<SVGProps<SVGSVGElement>>
-  color: string;
-}
+import MissionAddForm from '@/app/dailyMissionStamp/components/MissionAddForm';
 
 // ミッションカテゴリー統計情報の型定義
 // interface MissionCategoryStats {
@@ -55,17 +48,24 @@ interface MonthlyAchievements {
 //   icon: React.ReactElement;
 // }
 
+
 const DailyMissionStampApp: React.FC = () => {
   const {
     todayString,
     setSelectedDate,
   } = useDate();
-  const { dailyMissions, setDailyMissions } = useMission();
-
-  // ミッション追加用の状態
-  const [newMissionTitle, setNewMissionTitle] = useState<string>('');
-  const [newMissionCategory, setNewMissionCategory] = useState<string>('健康');
-  const [showAddForm, setShowAddForm] = useState<boolean>(false);
+  const {
+    dailyMissions,
+    setDailyMissions,
+    showAddForm,
+    newMissionTitle,
+    setNewMissionTitle,
+    newMissionCategory,
+    setNewMissionCategory,
+    addNewMission,
+    toggleAddForm,
+    categories
+  } = useMission();
 
   // 月間達成状況
   const [monthlyAchievements, setMonthlyAchievements] = useState<MonthlyAchievements>({
@@ -80,40 +80,15 @@ const DailyMissionStampApp: React.FC = () => {
     "2025-05-09": false,
   });
 
-  // カテゴリー一覧とそれに対応するアイコン
-  const categories: Category[] = [
-    { id: 1, name: "健康", icon: <Heart className="w-4 h-4 text-pink-500" />, color: "bg-pink-100" },
-    { id: 2, name: "成長", icon: <Zap className="w-4 h-4 text-yellow-500" />, color: "bg-yellow-100" },
-    { id: 3, name: "趣味", icon: <Star className="w-4 h-4 text-purple-500" />, color: "bg-purple-100" }
-  ];
-
-  // ミッション追加フォームの表示/非表示切り替え
-  const toggleAddForm = (): void => {
-    setShowAddForm(!showAddForm);
-    if (!showAddForm) {
-      setNewMissionTitle('');
-      setNewMissionCategory('健康');
-    }
-  };
-
-  // 新しいミッションの追加
-  const addNewMission = (): void => {
-    if (newMissionTitle.trim() === '') return;
-
-    const categoryObj = categories.find(cat => cat.name === newMissionCategory);
-    if (!categoryObj) return;
-
-    const newMission: Mission = {
-      id: Date.now(), // 一意のIDとして現在のタイムスタンプを使用
-      title: newMissionTitle,
-      completed: false,
-      category: newMissionCategory
-    };
-
-    setDailyMissions([...dailyMissions, newMission]);
-    setNewMissionTitle('');
-    setShowAddForm(false);
-  };
+  useEffect(() => {
+    setDailyMissions([
+      { id: 1, title: "朝の散歩 (20分)", completed: true, category: "健康" },
+      { id: 2, title: "英語の勉強", completed: true, category: "成長" },
+      { id: 3, title: "読書 (30分)", completed: false, category: "趣味" },
+      { id: 4, title: "瞑想", completed: true, category: "健康" },
+      { id: 5, title: "水を2リットル飲む", completed: false, category: "健康" }
+    ])
+  }, []);
 
   // ミッション名の編集開始
 
@@ -184,6 +159,7 @@ const DailyMissionStampApp: React.FC = () => {
     console.log("Selected date:", date);
     // ここに選択された日付に基づく処理を追加
   };
+  console.log('page.tsx - dailyMissions:', dailyMissions)
 
   return (
     <Default>
@@ -257,56 +233,15 @@ const DailyMissionStampApp: React.FC = () => {
 
           {/* クイックミッション追加フォーム */}
           {showAddForm && (
-            <div className="mb-4 bg-blue-50 p-4 rounded-xl border border-blue-100">
-              <div className="flex justify-between items-center mb-3">
-                <h3 className="font-medium text-blue-800">今日のミッションを追加</h3>
-                <button
-                  onClick={toggleAddForm}
-                  className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-200"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-              <div className="flex flex-col space-y-2">
-                <input
-                  type="text"
-                  value={newMissionTitle}
-                  onChange={(e) => setNewMissionTitle(e.target.value)}
-                  placeholder="ミッション名を入力"
-                  className="p-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  onKeyDown={(e) => e.key === 'Enter' && addNewMission()}
-                />
-                <div className="flex flex-wrap gap-2">
-                  {categories.map((category) => (
-                    <button
-                      key={category.id}
-                      className={`px-3 py-1 rounded-full text-xs flex items-center ${newMissionCategory === category.name
-                        ? 'bg-blue-500 text-white'
-                        : category.color + ' text-gray-700'
-                        }`}
-                      onClick={() => setNewMissionCategory(category.name)}
-                    >
-                      {React.cloneElement(category.icon, {
-                        className: `w-3 h-3 mr-1 ${newMissionCategory === category.name ? 'text-white' : ''}`
-                      })}
-                      {category.name}
-                    </button>
-                  ))}
-                </div>
-                <div className="flex justify-end">
-                  <button
-                    onClick={addNewMission}
-                    disabled={newMissionTitle.trim() === ''}
-                    className={`px-4 py-2 rounded-lg ${newMissionTitle.trim() === ''
-                      ? 'bg-gray-300 text-gray-500'
-                      : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600'
-                      }`}
-                  >
-                    追加
-                  </button>
-                </div>
-              </div>
-            </div>
+            <MissionAddForm
+              categories={categories}
+              addNewMission={addNewMission}
+              setNewMissionTitle={setNewMissionTitle}
+              setNewMissionCategory={setNewMissionCategory}
+              toggleAddForm={toggleAddForm}
+              newMissionTitle={newMissionTitle}
+              newMissionCategory={newMissionCategory}
+            />
           )}
 
           {/* ミッションリスト */}
