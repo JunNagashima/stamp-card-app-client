@@ -11,3 +11,11 @@ export interface Category {
   name: string;
   color: string;
 }
+
+// ミッション統計情報の型定義
+export interface MissionStats {
+  currentStreak: number;
+  longestStreak: number;
+  completionRate: number;
+  thisMonthDays: number;
+}

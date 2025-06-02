@@ -2,52 +2,22 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-  Map, PlusCircle, Shield,
+  Map, PlusCircle
 } from 'lucide-react';
 import Default from '@/app/components/organisms/default';
-import SidebarContent from '@/app/components/organisms/SideBarContent';
 import Calendar from '@/app/components/organisms/Calendar';
 import { useDate } from '@/hooks/date';
 import MissionItem from '@/app/dailyMissionStamp/components/MissionItem';
 import { useMission } from "@/hooks/mission";
 import MissionAddForm from '@/app/dailyMissionStamp/components/MissionAddForm';
-
-// ミッションカテゴリー統計情報の型定義
-// interface MissionCategoryStats {
-//   count: number;
-//   completed: number;
-//   icon: React.ReactElement;
-// }
-
-// ミッション統計情報の型定義
-// interface MissionStats {
-//   currentStreak: number;
-//   longestStreak: number;
-//   completionRate: number;
-//   thisMonthDays: number;
-// }
+import MissionStampProgress from '@/app/dailyMissionStamp/components/MissionStampProgress';
+import SideBar from './components/SideBar';
+import type { MissionStats } from '@/types/Mission';
 
 // 月間達成状況の型定義
 interface MonthlyAchievements {
   [date: string]: boolean;
 }
-
-// MissionCategoryコンポーネントのProps型定義
-// interface MissionCategoryProps {
-//   category: string;
-//   count: number;
-//   completed: number;
-//   color: string;
-//   icon: React.ReactElement;
-// }
-
-// StatsCardコンポーネントのProps型定義
-// interface StatsCardProps {
-//   title: string;
-//   value: string;
-//   icon: React.ReactElement;
-// }
-
 
 const DailyMissionStampApp: React.FC = () => {
   const {
@@ -90,20 +60,16 @@ const DailyMissionStampApp: React.FC = () => {
     ])
   }, []);
 
-  // ミッション名の編集開始
-
-
   // 全てのミッションが完了しているか確認
   const allMissionsCompleted = dailyMissions.every(mission => mission.completed);
 
   // 統計データ
-  // const stats: MissionStats = {
-  //   currentStreak: 7,
-  //   longestStreak: 14,
-  //   completionRate: 85,
-  //   thisMonthDays: 9 // 今月の達成日数
-  // };
-
+  const stats: MissionStats = {
+    currentStreak: 7,
+    longestStreak: 14,
+    completionRate: 85,
+    thisMonthDays: 9 // 今月の達成日数
+  };
 
   // 今日のすべてのミッションを完了としてマーク
   const markTodayAsComplete = (): void => {
@@ -117,100 +83,21 @@ const DailyMissionStampApp: React.FC = () => {
     });
   };
 
-  // MissionCategory コンポーネント
-  // const MissionCategory: React.FC<MissionCategoryProps> = ({ category, count, completed, color, icon }) => (
-  //   <div className={`flex items-center justify-between ${color} p-3 rounded-lg mb-2`}>
-  //     <div className="flex items-center">
-  //       <div className="mr-2">{icon}</div>
-  //       <div className="font-medium">{category}</div>
-  //     </div>
-  //     <div className="text-sm">{completed}/{count} 完了</div>
-  //   </div>
-  // );
-
-  // StatsCard コンポーネント
-  // const StatsCard: React.FC<StatsCardProps> = ({ title, value, icon }) => (
-  //   <div className="bg-white p-4 rounded-lg shadow flex items-center justify-between">
-  //     <div>
-  //       <p className="text-sm text-gray-500">{title}</p>
-  //       <p className="text-xl font-bold">{value}</p>
-  //     </div>
-  //     <div className="bg-blue-100 p-2 rounded-full">
-  //       {icon}
-  //     </div>
-  //   </div>
-  // );
-
-  // カテゴリー別にミッションをグループ化
-  // const missionsByCategory: Record<string, MissionCategoryStats> = dailyMissions.reduce((acc, mission) => {
-  //   if (!acc[mission.category]) {
-  //     acc[mission.category] = { count: 0, completed: 0, icon: mission.icon };
-  //   }
-  //   acc[mission.category].count += 1;
-  //   if (mission.completed) {
-  //     acc[mission.category].completed += 1;
-  //   }
-  //   return acc;
-  // }, {} as Record<string, MissionCategoryStats>);
-
   // 日付がクリックされたときの処理
   const handleDateClick = (date: Date): void => {
     setSelectedDate(date);
     console.log("Selected date:", date);
     // ここに選択された日付に基づく処理を追加
   };
-  console.log('page.tsx - dailyMissions:', dailyMissions)
 
   return (
     <Default>
       {/* 左サイドバー - デスクトップのみ表示 */}
-      <div className="col-span-1 hidden lg:block">
-        <div className="bg-white rounded-xl p-4 shadow-md mb-6">
-          <SidebarContent />
-        </div>
-
-        {/* ミッションカテゴリー */}
-        {/* <div className="bg-white rounded-xl p-4 shadow-md mb-6">
-          <h2 className="font-bold mb-3 text-lg">カテゴリー</h2>
-          {categories.map((category) => (
-            <MissionCategory
-              key={category.id}
-              category={category.name}
-              count={missionsByCategory[category.name]?.count || 0}
-              completed={missionsByCategory[category.name]?.completed || 0}
-              color={category.color}
-              icon={category.icon}
-            />
-          ))}
-        </div> */}
-
-        {/* 統計情報 */}
-        {/* <div className="bg-white rounded-xl p-4 shadow-md">
-          <h2 className="font-bold mb-4 text-lg">達成状況</h2>
-          <div className="grid grid-cols-2 gap-3">
-            <StatsCard
-              title="現在の連続記録"
-              value={stats.currentStreak + "日"}
-              icon={<Zap className="w-5 h-5 text-blue-500" />}
-            />
-            <StatsCard
-              title="最長記録"
-              value={stats.longestStreak + "日"}
-              icon={<Award className="w-5 h-5 text-blue-500" />}
-            />
-            <StatsCard
-              title="今月の達成"
-              value={stats.thisMonthDays + "日"}
-              icon={<CalendarIcon className="w-5 h-5 text-blue-500" />}
-            />
-            <StatsCard
-              title="完了率"
-              value={stats.completionRate + "%"}
-              icon={<CheckCircle className="w-5 h-5 text-blue-500" />}
-            />
-          </div>
-        </div> */}
-      </div>
+      <SideBar
+        categories={categories}
+        dailyMissions={dailyMissions}
+        stats={stats}
+      />
 
       {/* 中央コンテンツ：今日のミッション */}
       <div className="col-span-1 lg:col-span-2">
@@ -270,48 +157,13 @@ const DailyMissionStampApp: React.FC = () => {
           </div>
 
           {/* 今日のスタンプカード進捗 */}
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 md:p-5 border border-blue-100">
-            <div className="flex justify-between items-center mb-4 flex-wrap">
-              <h3 className="font-bold text-base md:text-lg flex items-center mb-2 md:mb-0">
-                <Shield className="w-5 h-5 mr-2 text-blue-500" />
-                今日の進捗
-              </h3>
-              <div className="bg-white rounded-full px-3 py-1 font-medium text-sm border border-blue-100">
-                {dailyMissions.filter(m => m.completed).length}/{dailyMissions.length}
-              </div>
-            </div>
-
-            <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
-              <div
-                className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all duration-500"
-                style={{ width: dailyMissions.length > 0 ? `${(dailyMissions.filter(m => m.completed).length / dailyMissions.length) * 100}%` : '0%' }}
-              ></div>
-            </div>
-
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-0">
-              <p className="text-sm text-gray-600">
-                {dailyMissions.length === 0 ? (
-                  'ミッションを追加してスタートしましょう！'
-                ) : allMissionsCompleted ? (
-                  '今日のミッションをコンプリートしました！'
-                ) : (
-                  `あと${dailyMissions.length - dailyMissions.filter(m => m.completed).length}個のミッションでコンプリートです！`
-                )}
-              </p>
-              <button
-                onClick={markTodayAsComplete}
-                disabled={monthlyAchievements[todayString] || dailyMissions.length === 0}
-                className={`px-4 py-2 rounded-lg font-medium w-full md:w-auto ${monthlyAchievements[todayString] || dailyMissions.length === 0
-                  ? 'bg-gray-300 text-gray-500'
-                  : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600'
-                  }`}
-              >
-                {monthlyAchievements[todayString]
-                  ? '今日は達成済み'
-                  : '今日のスタンプを押す'}
-              </button>
-            </div>
-          </div>
+          <MissionStampProgress
+            dailyMissions={dailyMissions}
+            markTodayAsComplete={markTodayAsComplete}
+            monthlyAchievements={monthlyAchievements}
+            todayString={todayString}
+            allMissionsCompleted={allMissionsCompleted}
+          />
         </div>
 
         {/* 共通カレンダーコンポーネントを使用 */}
