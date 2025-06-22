@@ -14,11 +14,6 @@ import MissionStampProgress from '@/app/dailyMissionStamp/components/MissionStam
 import SideBar from './components/SideBar';
 import type { MissionStats } from '@/types/Mission';
 
-// 月間達成状況の型定義
-interface MonthlyAchievements {
-  [date: string]: boolean;
-}
-
 const DailyMissionStampApp: React.FC = () => {
   const {
     todayString,
@@ -38,30 +33,31 @@ const DailyMissionStampApp: React.FC = () => {
   } = useMission();
 
   // 月間達成状況
-  const [monthlyAchievements, setMonthlyAchievements] = useState<MonthlyAchievements>({
-    "2025-05-01": true,
-    "2025-05-02": true,
-    "2025-05-03": true,
-    "2025-05-04": true,
-    "2025-05-05": true,
-    "2025-05-06": true,
-    "2025-05-07": true,
-    "2025-05-08": false,
-    "2025-05-09": false,
-  });
+  const [monthlyAchievements, setMonthlyAchievements] = useState<string[]>([
+    "2025-06-01",
+    "2025-06-02",
+    "2025-06-03",
+    "2025-06-04",
+    "2025-06-05",
+    "2025-06-06",
+    "2025-06-07",
+    "2025-06-08",
+    "2025-06-09",
+  ]);
 
   useEffect(() => {
+    console.log('DailyMissionStampApp - Initializing daily missions');
     setDailyMissions([
-      { id: 1, title: "朝の散歩 (20分)", completed: true, category: "健康" },
-      { id: 2, title: "英語の勉強", completed: true, category: "成長" },
-      { id: 3, title: "読書 (30分)", completed: false, category: "趣味" },
-      { id: 4, title: "瞑想", completed: true, category: "健康" },
-      { id: 5, title: "水を2リットル飲む", completed: false, category: "健康" }
+      { id: '1', title: "朝の散歩 (20分)", isCompleted: true, category: { id: '1', name: "健康", color: "bg-pink-100" } },
+      { id: '2', title: "英語の勉強", isCompleted: true, category: { id: '2', name: "成長", color: "bg-yellow-100" } },
+      { id: '3', title: "読書 (30分)", isCompleted: false, category: { id: '3', name: "趣味", color: "bg-purple-100" } },
+      { id: '4', title: "瞑想", isCompleted: true, category: { id: '1', name: "健康", color: "bg-pink-100" } },
+      { id: '5', title: "水を2リットル飲む", isCompleted: false, category: { id: '1', name: "健康", color: "bg-pink-100" } }
     ])
   }, []);
 
   // 全てのミッションが完了しているか確認
-  const allMissionsCompleted = dailyMissions.every(mission => mission.completed);
+  const allMissionsCompleted = dailyMissions.every(mission => mission.isCompleted);
 
   // 統計データ
   const stats: MissionStats = {
@@ -74,13 +70,13 @@ const DailyMissionStampApp: React.FC = () => {
   // 今日のすべてのミッションを完了としてマーク
   const markTodayAsComplete = (): void => {
     // すべてのミッションを完了にする
-    setDailyMissions(dailyMissions.map(mission => ({ ...mission, completed: true })));
+    setDailyMissions(dailyMissions.map(mission => ({ ...mission, isCompleted: true })));
 
     // 今日の日付を月間達成リストに追加
-    setMonthlyAchievements({
+    setMonthlyAchievements([
       ...monthlyAchievements,
-      [todayString]: true
-    });
+      todayString
+    ]);
   };
 
   // 日付がクリックされたときの処理

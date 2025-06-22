@@ -39,7 +39,7 @@ const MissionItem = ({ mission, dailyMissions, setDailyMissions }: MissionItemPr
         : mission
     ));
 
-    setEditingMissionId(null);
+    setEditingMissionId(undefined);
     setEditMissionTitle('');
   };
 
@@ -48,41 +48,41 @@ const MissionItem = ({ mission, dailyMissions, setDailyMissions }: MissionItemPr
     if (e.key === 'Enter') {
       saveEditedMission();
     } else if (e.key === 'Escape') {
-      setEditingMissionId(null);
+      setEditingMissionId(undefined);
       setEditMissionTitle('');
     }
   };
 
   // ミッション完了トグル
-  const toggleMissionCompletion = (missionId: number): void => {
+  const toggleMissionCompletion = (missionId: string): void => {
     console.log('toggleMissionCompletion', missionId);
     console.log('dailyMissions', dailyMissions);
     console.log('mission', mission);
     setDailyMissions(dailyMissions.map(mission =>
-      mission.id === missionId ? { ...mission, completed: !mission.completed } : mission
+      mission.id === missionId ? { ...mission, isCompleted: !mission.isCompleted } : mission
     ));
   };
 
   // ミッション削除
-  const deleteMission = (missionId: number): void => {
+  const deleteMission = (missionId: string): void => {
     setDailyMissions(dailyMissions.filter(mission => mission.id !== missionId));
   };
 
   return (
     <div
       key={mission.id}
-      className={`flex items-center justify-between p-3 md:p-4 rounded-xl border ${mission.completed ? 'bg-blue-50 border-blue-100' : 'bg-white border-gray-200'
+      className={`flex items-center justify-between p-3 md:p-4 rounded-xl border ${mission.isCompleted ? 'bg-blue-50 border-blue-100' : 'bg-white border-gray-200'
         } hover:shadow-md transition-all duration-200`}
     >
       <div className="flex items-center flex-grow">
         <button
           onClick={() => toggleMissionCompletion(mission.id)}
-          className={`w-7 h-7 md:w-8 md:h-8 rounded-full mr-2 md:mr-3 flex items-center justify-center ${mission.completed
+          className={`w-7 h-7 md:w-8 md:h-8 rounded-full mr-2 md:mr-3 flex items-center justify-center ${mission.isCompleted
             ? 'bg-gradient-to-r from-blue-400 to-purple-400 text-white'
             : 'border-2 border-gray-300'
             }`}
         >
-          {mission.completed && <CheckCircle className="w-4 h-4 md:w-5 md:h-5" />}
+          {mission.isCompleted && <CheckCircle className="w-4 h-4 md:w-5 md:h-5" />}
         </button>
         <div className="flex-grow">
           <div className="flex items-center">
@@ -99,14 +99,14 @@ const MissionItem = ({ mission, dailyMissions, setDailyMissions }: MissionItemPr
               />
             ) : (
               <p
-                className={`font-medium ml-2 text-sm md:text-base ${mission.completed ? 'line-through text-gray-500' : ''}`}
-                onClick={() => !mission.completed && startEditingMission(mission)}
+                className={`font-medium ml-2 text-sm md:text-base ${mission.isCompleted ? 'line-through text-gray-500' : ''}`}
+                onClick={() => !mission.isCompleted && startEditingMission(mission)}
               >
                 {mission.title}
               </p>
             )}
           </div>
-          <span className="text-xs text-gray-500">{mission.category}</span>
+          <span className="text-xs text-gray-500">{mission.category.name}</span>
         </div>
       </div>
 
@@ -122,7 +122,7 @@ const MissionItem = ({ mission, dailyMissions, setDailyMissions }: MissionItemPr
         ) : (
           <>
             {/* 編集ボタン - 完了していない場合のみ表示 */}
-            {!mission.completed && (
+            {!mission.isCompleted && (
               <button
                 onClick={() => startEditingMission(mission)}
                 className="text-gray-400 hover:text-gray-600 p-1 hover:bg-gray-100 rounded-full mr-1"

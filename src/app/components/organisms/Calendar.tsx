@@ -4,16 +4,11 @@ import React from 'react';
 import { CheckCircle, ChevronRight } from 'lucide-react';
 import { useDate } from '@/hooks/date';
 
-// 月間達成状況の型定義
-interface MonthlyAchievements {
-  [date: string]: boolean;
-}
-
 // カレンダーコンポーネントのProps型定義
 interface CalendarProps {
   showDetailLink?: boolean;
   onDateClick?: (date: Date) => void;
-  monthlyAchievements?: MonthlyAchievements;
+  monthlyAchievements?: string[];
   customClassName?: string;
   highlightToday?: boolean;
 }
@@ -25,7 +20,7 @@ interface CalendarProps {
 const Calendar: React.FC<CalendarProps> = ({
   showDetailLink = false,
   onDateClick,
-  monthlyAchievements = {},
+  monthlyAchievements = [],
   customClassName = "",
   highlightToday = true,
 }) => {
@@ -43,16 +38,16 @@ const Calendar: React.FC<CalendarProps> = ({
   const monthNames: string[] = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
 
   // カレンダーを生成する関数
-  const generateCalendar = (year: number, month: number): (number | null)[] => {
+  const generateCalendar = (year: number, month: number): (number | undefined)[] => {
     const firstDayOfMonth = new Date(year, month, 1);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const startingDayOfWeek = firstDayOfMonth.getDay();
 
-    const calendar: (number | null)[] = [];
+    const calendar: (number | undefined)[] = [];
 
     // 週の初めの空白を埋める
     for (let i = 0; i < startingDayOfWeek; i++) {
-      calendar.push(null);
+      calendar.push(undefined);
     }
 
     // 月の日数を埋める
@@ -84,7 +79,7 @@ const Calendar: React.FC<CalendarProps> = ({
   const getDateStringFn = getDateString || defaultGetDateString;
 
   // 選択された日付が現在の月に属しているか確認する関数
-  const isDateSelected = (day: number | null): boolean => {
+  const isDateSelected = (day: number | undefined): boolean => {
     if (!selectedDate || !day) return false;
 
     return selectedDate.getFullYear() === currentYear &&
@@ -118,8 +113,8 @@ const Calendar: React.FC<CalendarProps> = ({
       {/* カレンダー日付 */}
       <div className="grid grid-cols-7 gap-1 md:gap-2">
         {calendarDays.map((day, index) => {
-          const dateStr = day ? getDateStringFn(day) : null;
-          const isCompleted = dateStr && monthlyAchievements[dateStr];
+          const dateStr = day && getDateStringFn(day);
+          const isCompleted = dateStr && monthlyAchievements.includes(dateStr);
           const isToday = dateStr === todayString && highlightToday;
           const isSelected = isDateSelected(day);
 

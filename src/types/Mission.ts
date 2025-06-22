@@ -1,13 +1,13 @@
 // ミッションの型定義
 export interface Mission {
-  id: number;
+  id: string; // UUID
   title: string;
-  completed: boolean;
-  category: string;
+  category: Category;
+  isCompleted?: boolean; // オプション: 完了状態
 }
 
 export interface Category {
-  id: number;
+  id: string; // UUID
   name: string;
   color: string;
 }

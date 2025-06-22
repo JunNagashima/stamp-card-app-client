@@ -25,8 +25,7 @@ const SideBar = ({ categories, dailyMissions, stats }: SideBarProps) => {
           <MissionCategory
             key={category.id}
             dailyMissions={dailyMissions}
-            category={category.name}
-            color={category.color}
+            category={category}
           />
         ))}
       </div>

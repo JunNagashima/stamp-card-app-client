@@ -10,16 +10,16 @@ export const useMission = () => {
 
   // カテゴリー一覧とそれに対応するアイコン
   const categories: Category[] = [
-    { id: 1, name: "健康", color: "bg-pink-100" },
-    { id: 2, name: "成長", color: "bg-yellow-100" },
-    { id: 3, name: "趣味", color: "bg-purple-100" }
+    { id: '1', name: "健康", color: "bg-pink-100" },
+    { id: '2', name: "成長", color: "bg-yellow-100" },
+    { id: '3', name: "趣味", color: "bg-purple-100" }
   ];
 
   // 編集中のミッションID
-  const [editingMissionId, setEditingMissionId] = useState<number | null>(null);
+  const [editingMissionId, setEditingMissionId] = useState<string | undefined>(undefined);
   // ミッション追加用の状態
   const [newMissionTitle, setNewMissionTitle] = useState<string>('');
-  const [newMissionCategory, setNewMissionCategory] = useState<string>('健康');
+  const [newMissionCategory, setNewMissionCategory] = useState<string | undefined>(undefined);
   const [showAddForm, setShowAddForm] = useState<boolean>(false);
 
   // ミッション追加フォームの表示/非表示切り替え
@@ -27,7 +27,7 @@ export const useMission = () => {
     setShowAddForm(!showAddForm);
     if (!showAddForm) {
       setNewMissionTitle('');
-      setNewMissionCategory('健康');
+      setNewMissionCategory(undefined);
     }
   };
 
@@ -39,10 +39,10 @@ export const useMission = () => {
     if (!categoryObj) return;
 
     const newMission: Mission = {
-      id: Date.now(), // 一意のIDとして現在のタイムスタンプを使用
+      id: `kari-${Date.now()}`, // 仮のID生成
+      // userId: 'user-123', // 仮のユーザーID
       title: newMissionTitle,
-      completed: false,
-      category: newMissionCategory
+      category: categoryObj
     };
     console.log('mission.ts - Adding new mission:', newMission);
     setDailyMissions(prevMissions => {

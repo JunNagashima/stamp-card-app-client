@@ -1,9 +1,8 @@
-import { Mission } from "@/types/Mission";
+import { Category, Mission } from "@/types/Mission";
 
 interface MissionCategoryProps {
-  category: string;
+  category: Category;
   dailyMissions: Mission[];
-  color: string;
 }
 
 interface MissionCategoryStats {
@@ -11,25 +10,25 @@ interface MissionCategoryStats {
   completed: number;
 }
 
-const MissionCategory = ({ dailyMissions, category, color }: MissionCategoryProps) => {
+const MissionCategory = ({ dailyMissions, category }: MissionCategoryProps) => {
   const missionsByCategory: Record<string, MissionCategoryStats> = dailyMissions.reduce((acc, mission) => {
-    if (!acc[mission.category]) {
-      acc[mission.category] = { count: 0, completed: 0 };
+    if (!acc[mission.category.id]) {
+      acc[mission.category.id] = { count: 0, completed: 0 };
     }
-    acc[mission.category].count += 1;
-    if (mission.completed) {
-      acc[mission.category].completed += 1;
+    acc[mission.category.id].count += 1;
+    if (mission.isCompleted) {
+      acc[mission.category.id].completed += 1;
     }
     return acc;
   }, {} as Record<string, MissionCategoryStats>);
 
-  const count = missionsByCategory[category]?.count || 0;
-  const completed = missionsByCategory[category]?.completed || 0;
+  const count = missionsByCategory[category.id]?.count || 0;
+  const completed = missionsByCategory[category.id]?.completed || 0;
 
   return (
-    <div className={`flex items-center justify-between ${color} p-3 rounded-lg mb-2`}>
+    <div className={`flex items-center justify-between ${category.color} p-3 rounded-lg mb-2`}>
       <div className="flex items-center">
-        <div className="font-medium">{category}</div>
+        <div className="font-medium">{category.name}</div>
       </div>
       <div className="text-sm">{completed}/{count} 完了</div>
     </div>

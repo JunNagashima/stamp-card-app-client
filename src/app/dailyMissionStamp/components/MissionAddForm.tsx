@@ -9,7 +9,7 @@ interface MissionAddFormProps {
   setNewMissionCategory: (category: string) => void;
   toggleAddForm: () => void;
   newMissionTitle: string;
-  newMissionCategory: string;
+  newMissionCategory?: string;
 }
 const MissionAddForm = ({
   categories,
